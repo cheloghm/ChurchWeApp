@@ -1,4 +1,5 @@
-﻿using ChurchWeApp.ServiceInterfaces;
+﻿using ChurchWeApp.Service;
+using ChurchWeApp.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChurchWeApp.Controllers
@@ -6,10 +7,12 @@ namespace ChurchWeApp.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, ITokenService tokenService)
         {
             _authService = authService;
+            _tokenService = tokenService;
         }
 
         [HttpGet]
@@ -22,6 +25,12 @@ namespace ChurchWeApp.Controllers
         public IActionResult Register()
         {
             return PartialView("_RegisterPartial");
+        }
+
+        public IActionResult Logout()
+        {
+            _tokenService.ClearToken();
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -52,5 +61,6 @@ namespace ChurchWeApp.Controllers
 
             return Json(new { success = true, message = "Successfully registered. You can now log in." });
         }
+
     }
 }

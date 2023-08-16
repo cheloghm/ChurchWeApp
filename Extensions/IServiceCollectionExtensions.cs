@@ -15,6 +15,7 @@ namespace ChurchWeApp.Extensions
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddSingleton<ITokenService, TokenService>();
 
             // Register a named HttpClient with the base address
             services.AddHttpClient("DefaultHttpClient", client =>
@@ -35,8 +36,10 @@ namespace ChurchWeApp.Extensions
             {
                 var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
                 var httpClient = httpClientFactory.CreateClient("DefaultHttpClient");
-                return new UserRepository(httpClient);
+                var tokenService = provider.GetRequiredService<ITokenService>();
+                return new UserRepository(httpClient, tokenService);
             });
+
 
             return services; // Return the services for chaining if needed.
         }

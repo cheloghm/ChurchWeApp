@@ -7,16 +7,25 @@ namespace ChurchWeApp.Service
     public class AuthService : IAuthService
     {
         private readonly IAuthRepository _authRepository;
+        private readonly ITokenService _tokenService;
 
-        public AuthService(IAuthRepository authRepository)
+        public AuthService(IAuthRepository authRepository, ITokenService tokenService)
         {
             _authRepository = authRepository;
+            _tokenService = tokenService;
         }
 
         public async Task<string> Login(string email, string password)
         {
             var userAuthDto = new UserAuthDTO { Email = email, Password = password };
-            return await _authRepository.Login(userAuthDto);
+            var token = await _authRepository.Login(userAuthDto);
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                _tokenService.SetToken(token);
+            }
+
+            return token;
         }
 
         // ...

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject ChurchWeApp.ServiceInterfaces.ITokenService TokenService
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -29,7 +31,15 @@
                         </li>
                         <!-- Add these buttons on your navbar for triggering modals -->
                         <li class="nav-item">
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                            @if (TokenService.IsLoggedIn())
+                            {
+                                <a href="@Url.Action("Logout", "Auth")" class="btn btn-primary">Log Out</a>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">Login</button>
+                            }
+
                         </li>
                         <li class="nav-item">
                         <button type="button" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>

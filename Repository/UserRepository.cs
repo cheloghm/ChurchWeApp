@@ -3,30 +3,32 @@ using ChurchWeApp.Models;
 using ChurchWeApp.RepositoryInterfaces;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using ChurchWeApp.ServiceInterfaces;
 
 namespace ChurchWeApp.Repository
 {
     public class UserRepository : IUserRepository
     {
         private readonly HttpClient _httpClient;
+        private readonly ITokenService _tokenService;
 
-        public UserRepository(HttpClient httpClient)
+        public UserRepository(HttpClient httpClient, ITokenService tokenService)
         {
             _httpClient = httpClient;
+            _tokenService = tokenService;
         }
 
         public async Task<UserDTO> GetMyDetails()
         {
-            // Add the authorization header with the token.
-            if (_httpClient.DefaultRequestHeaders.Authorization == null)
+            var token = _tokenService.GetToken();
+            if (string.IsNullOrEmpty(token))
             {
-                // Fetch the token from where you store it after login (for example, in a service or configuration).
-                string token = "<YOUR_TOKEN_HERE>";
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                throw new InvalidOperationException("No authentication token found.");
             }
 
-            var response = await _httpClient.GetAsync("Users/me");
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
+            var response = await _httpClient.GetAsync("Users/me");
             if (!response.IsSuccessStatusCode)
             {
                 return null;
@@ -38,4 +40,5 @@ namespace ChurchWeApp.Repository
             return userDto;
         }
     }
+
 }
