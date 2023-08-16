@@ -1,0 +1,30 @@
+﻿.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 20%;
+    background-color: #f4f4f4; /* or any color you prefer */
+    padding: 15px;
+}
+
+.main-content {
+    width: 80%;
+    padding: 15px;
+}
+
+@media only screen and (max-width: 600px) {
+    .sidebar {
+        width: 100%;
+        display: none;
+        position: absolute;
+        top: 60px; /* assuming your navbar height */
+        left: 0;
+        height: calc(100vh - 60px);
+    }
+
+    .dashboard-container .sidebar.active {
+        display: block;
+    }
+}

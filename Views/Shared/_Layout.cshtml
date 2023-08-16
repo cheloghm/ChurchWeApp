@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ChurchWeApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ChurchWeApp.styles.css" asp-append-version="true" />
+
+    <!-- Add Bootstrap CSS link in head -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ChurchWeApp</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <!-- Add these buttons on your navbar for triggering modals -->
+                        <li class="nav-item">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                        </li>
+                        <li class="nav-item">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+                        </li>
+                        @*<li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>*@
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Right below the navbar -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - ChurchWeApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <!-- Add these modals below your content but above scripts -->
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm" action="/Auth/AuthenticateLogin" method="post">
+                        <!-- Replace with your actual endpoint -->
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="loginEmail" name="Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" name="Password" required>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Register</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm" action="/Auth/AuthenticateRegister" method="post">
+                        <!-- Replace with your actual endpoint -->
+                        <div class="mb-3">
+                            <label for="registerFirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="registerFirstName" name="firstName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerMiddleName" class="form-label">Middle Name</label>
+                            <input type="text" class="form-control" id="registerMiddleName" name="middleName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerLastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="registerLastName" name="lastName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="registerEmail" name="email" required>
+                        </div>
+                        @*<div class="mb-3">
+                            <label for="registerRole" class="form-label">Role</label>
+                            <input type="text" class="form-control" id="registerRole" name="role" required>
+                        </div>*@
+                        <div class="mb-3">
+                            <label for="registerDOB" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" id="registerDOB" name="dob" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="registerPassword" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Add Bootstrap JS scripts at the bottom just before closing body tag -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- ...existing HTML code for the login form... -->
+    <script>
+        $(document).ready(function () {
+            $("#loginForm").submit(function (e) {
+                e.preventDefault();
+                $.post($(this).attr('action'), $(this).serialize(), function (response) {
+                    if (response.success) {
+                        localStorage.setItem('authToken', response.token);
+                        // Redirect to the dashboard or refresh the page.
+                        window.location.href = '/Dashboard';
+                    } else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $("#registerForm").submit(function (e) {
+                e.preventDefault();
+                $.post($(this).attr('action'), $(this).serialize(), function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                    } else {
+                        alert(response.message);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
