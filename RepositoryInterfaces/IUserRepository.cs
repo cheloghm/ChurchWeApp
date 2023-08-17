@@ -5,5 +5,6 @@ namespace ChurchWeApp.RepositoryInterfaces
     public interface IUserRepository
     {
         Task<UserDTO> GetMyDetails();
+        Task<UserDTO> UpdateUserProfile(UpdateUserDTO userDto);
     }
 }

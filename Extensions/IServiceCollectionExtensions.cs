@@ -20,7 +20,8 @@ namespace ChurchWeApp.Extensions
             // Register a named HttpClient with the base address
             services.AddHttpClient("DefaultHttpClient", client =>
             {
-                client.BaseAddress = new Uri("http://localhost:5159/api/");
+                //client.BaseAddress = new Uri("http://localhost:5159/api/");
+                client.BaseAddress = new Uri("https://localhost:7170/api/");
             });
 
             // Register repositories with the named HttpClient

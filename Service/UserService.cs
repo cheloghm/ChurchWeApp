@@ -18,5 +18,10 @@ namespace ChurchWeApp.Service
         {
             return await _userRepository.GetMyDetails();
         }
+
+        public async Task<UserDTO> UpdateUserProfile(UpdateUserDTO userDto)
+        {
+            return await _userRepository.UpdateUserProfile(userDto);
+        }
     }
 }
