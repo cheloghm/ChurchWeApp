@@ -56,7 +56,43 @@ namespace ChurchWeApp.Controllers
                 updateUserDto.FirstName = model.FirstName;
                 changesDetected = true;
             }
+            else
+                updateUserDto.FirstName = currentUser.FirstName;
+
+            if (currentUser.MiddleName != model.MiddleName)
+            {
+                updateUserDto.MiddleName = model.MiddleName;
+                changesDetected = true;
+            }
+            else
+                updateUserDto.MiddleName = currentUser.MiddleName;
+
+            if (currentUser.LastName != model.LastName)
+            {
+                updateUserDto.LastName = model.LastName;
+                changesDetected = true;
+            }
+            else
+                updateUserDto.LastName = currentUser.LastName;
+
+            if (currentUser.DOB != model.DOB)
+            {
+                updateUserDto.DOB = model.DOB;
+                changesDetected = true;
+            }
+            else
+                updateUserDto.DOB = currentUser.DOB;
+
+            if (currentUser.Email != model.Email)
+            {
+                updateUserDto.Email = model.Email;
+                changesDetected = true;
+            }
+            else
+                updateUserDto.Email = currentUser.Email;
             // Do similar comparisons for other fields...
+
+            updateUserDto.Role = currentUser.Role;
 
             if (!changesDetected)
             {
