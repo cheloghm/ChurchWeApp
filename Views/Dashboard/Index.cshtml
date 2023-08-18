@@ -5,15 +5,75 @@
     @model UserDTO
 }
 
+@{
+    var alertMessage = TempData["AlertMessage"] as string;
+    var alertType = TempData["AlertType"] as string ?? "success"; // Default to "success" if no type is set
+}
+
+@if (!string.IsNullOrEmpty(alertMessage))
+{
+    <div class="alert alert-@alertType" role="alert">
+        @alertMessage
+    </div>
+}
+
+@{
+    var message = TempData["Message"] as string;
+    if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-success">
+            @message
+        </div>
+    }
+}
+
+@{
+    var profilePhotoBase64 = ViewBag.ProfilePhotoBase64 as string;
+}
+
+<style>
+    .profile-photo {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 2px solid #000; /* border line */
+    }
+
+    .placeholder {
+        background-color: lightgray;
+        line-height: 200px;
+        text-align: center;
+        font-size: 16px;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        word-wrap: break-word;
+        padding: 10px;
+    }
+</style>
+
 <div class="container-fluid">
     <div class="row">
 
         <!-- Left Sidebar -->
         <div class="col-lg-2 col-md-3 d-none d-md-block bg-light">
-            @*<h4>@Model.FirstName @Model.LastName</h4>
-            <p>@Model.Email</p>*@
             @if (Model != null)
             {
+                <div class="d-flex justify-content-center">
+                    @if (!string.IsNullOrEmpty(profilePhotoBase64))
+                    {
+                        <img src="data:image/jpeg;base64,@profilePhotoBase64" alt="Profile Photo" class="profile-photo" />
+                    }
+                    else
+                    {
+                        <div class="profile-photo placeholder">
+                            Upload Profile Photo
+                        </div>
+                    }
+                </div>
+
                 <h4>@Model.FirstName @Model.LastName</h4>
                 <p>@Model.Email</p>
                 <p>@Model.Role</p>
@@ -28,7 +88,7 @@
             <button class="btn btn-primary btn-block mt-2">Notifications</button>
             <button class="btn btn-primary btn-block mt-2">Requests</button>
             <button class="btn btn-primary btn-block mt-2" data-bs-toggle="modal" data-bs-target="#updateProfileModal">Update Profile</button>
-            <button class="btn btn-primary btn-block mt-2">Upload Photo</button>
+            <button class="btn btn-primary btn-block mt-2" data-bs-toggle="modal" data-bs-target="#updateProfilePhotoModal">Upload Photo</button>
             <button class="btn btn-primary btn-block mt-2">Modify Roles</button>
             <button class="btn btn-primary btn-block mt-2">Visitors</button>
         </div>
@@ -39,6 +99,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Mobile Navbar -->
 <nav class="navbar navbar-expand-lg d-md-none navbar-light bg-light">
@@ -105,3 +166,22 @@
         </div>
     </div>
 </div>
+
+<!-- _UploadProfilePhotoPartial.cshtml -->
+<div class="modal fade" id="updateProfilePhotoModal" tabindex="-1" aria-labelledby="updateProfilePhotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Profile Photo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="UploadProfilePhoto" asp-controller="Dashboard" enctype="multipart/form-data" method="post">
+                    <input type="file" name="photo" />
+                    <input type="submit" value="Upload" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

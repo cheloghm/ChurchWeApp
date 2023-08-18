@@ -1,4 +1,6 @@
 ﻿using ChurchWeApp.Models;
+using ChurchWeApp.RepositoryInterfaces;
+using ChurchWeApp.Service;
 using ChurchWeApp.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,10 +10,12 @@ namespace ChurchWeApp.Controllers
     public class DashboardController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IProfilePhotoService _profilePhotoService;
 
-        public DashboardController(IUserService userService)
+        public DashboardController(IUserService userService, IProfilePhotoService profilePhotoService)
         {
             _userService = userService;
+            _profilePhotoService = profilePhotoService;
         }
 
         public async Task<IActionResult> Index()
@@ -21,6 +25,12 @@ namespace ChurchWeApp.Controllers
             {
                 return NotFound();
             }
+
+            if (model.ProfilePhoto != null)
+            {
+                ViewBag.ProfilePhotoBase64 = Convert.ToBase64String(model.ProfilePhoto);
+            }
+
             return View(model);
         }
 
@@ -33,6 +43,12 @@ namespace ChurchWeApp.Controllers
             }
             return PartialView("_UpdateUserProfile", model);
         }
+
+        public IActionResult UploadProfilePhotoModal()
+        {
+            return PartialView("_UploadProfilePhotoPartial");
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> UpdateUserProfile(UpdateUserDTO model)
@@ -102,10 +118,41 @@ namespace ChurchWeApp.Controllers
             var updatedUser = await _userService.UpdateUserProfile(updateUserDto);
             if (updatedUser == null)
             {
-                return Json(new { success = false, message = "Profile update failed. Please try again." });
+                TempData["AlertMessage"] = "Profile update failed. Please try again.";
+                TempData["AlertType"] = "danger"; // For a red Bootstrap alert
+                return RedirectToAction("Index", "Dashboard");
             }
 
-            return Json(new { success = true, message = "Successfully updated profile." });
+            TempData["AlertMessage"] = "Profile update Successful!.";
+            TempData["AlertType"] = "success"; // For a red Bootstrap alert
+            return RedirectToAction("Index", "Dashboard");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadProfilePhoto(IFormFile photo)
+        {
+            if (photo == null || photo.Length == 0)
+            {
+                TempData["Message"] = "Invalid photo file.";
+                return RedirectToAction("Index");
+            }
+
+            using var memoryStream = new MemoryStream();
+            await photo.CopyToAsync(memoryStream);
+
+            var photoBytes = memoryStream.ToArray();
+
+            var profilePhoto = await _profilePhotoService.UploadProfilePhoto(photoBytes);
+
+            if (profilePhoto == null)
+            {
+                TempData["Message"] = "Failed to update profile photo. Please try again.";
+                return RedirectToAction("Index");
+            }
+
+            TempData["Message"] = "Successfully updated profile photo.";
+            var model = await _userService.GetMyDetails();
+            return RedirectToAction("Index", model);
         }
 
     }

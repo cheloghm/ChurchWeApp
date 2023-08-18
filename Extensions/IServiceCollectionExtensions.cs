@@ -16,6 +16,8 @@ namespace ChurchWeApp.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddSingleton<ITokenService, TokenService>();
+            services.AddScoped<IProfilePhotoService, ProfilePhotoService>();
+            services.AddScoped<IProfilePhotoRepository, ProfilePhotoRepository>();
 
             // Register a named HttpClient with the base address
             services.AddHttpClient("DefaultHttpClient", client =>
@@ -39,6 +41,14 @@ namespace ChurchWeApp.Extensions
                 var httpClient = httpClientFactory.CreateClient("DefaultHttpClient");
                 var tokenService = provider.GetRequiredService<ITokenService>();
                 return new UserRepository(httpClient, tokenService);
+            });
+
+            services.AddTransient<IProfilePhotoRepository>(provider =>
+            {
+                var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+                var httpClient = httpClientFactory.CreateClient("DefaultHttpClient");
+                var tokenService = provider.GetRequiredService<ITokenService>();
+                return new ProfilePhotoRepository(httpClient, tokenService);
             });
 
 
