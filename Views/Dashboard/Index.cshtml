@@ -85,18 +85,34 @@
             }
             <!-- Add other user details as required -->
 
-            <button class="btn btn-primary btn-block mt-2">Notifications</button>
-            <button class="btn btn-primary btn-block mt-2">Requests</button>
+            <button class="btn btn-primary btn-block mt-2 content-btn">Notifications</button>
+            <button class="btn btn-primary btn-block mt-2 content-btn">Requests</button>
             <button class="btn btn-primary btn-block mt-2" data-bs-toggle="modal" data-bs-target="#updateProfileModal">Update Profile</button>
             <button class="btn btn-primary btn-block mt-2" data-bs-toggle="modal" data-bs-target="#updateProfilePhotoModal">Upload Photo</button>
-            <button class="btn btn-primary btn-block mt-2">Modify Roles</button>
-            <button class="btn btn-primary btn-block mt-2">Visitors</button>
+            <button class="btn btn-primary btn-block mt-2 content-btn">Modify Roles</button>
+            <button class="btn btn-primary btn-block mt-2 content-btn">Visitors</button>
         </div>
 
         <!-- Content Area -->
         <div class="col-lg-10 col-md-9">
-            <!-- You can add content for the right side here -->
+            <div id="contentNotifications" class="content-section" style="display: none;">
+                <!-- Notifications content goes here -->
+                <h4>Notifications</h4>
+            </div>
+            <div id="contentRequests" class="content-section" style="display: none;">
+                <!-- Requests content goes here -->
+                <h4>Requests</h4>
+            </div>
+            <div id="contentVisitors" class="content-section" style="display: none;">
+                <!-- Visitors content goes here -->
+                <h4>Visitors</h4>
+            </div>
+            <div id="contentModifyRoles" class="content-section" style="display: none;">
+                <!-- Modify Roles content goes here -->
+                <h4>Roles</h4>
+            </div>
         </div>
+
     </div>
 </div>
 
@@ -111,15 +127,36 @@
             @if (Model != null)
             {
                 <li class="nav-item">@Model.FirstName @Model.LastName</li>
+                <li class="nav-item">
+                    @if (!string.IsNullOrEmpty(profilePhotoBase64))
+                    {
+                        <img src="data:image/jpeg;base64,@profilePhotoBase64" alt="Profile Photo" class="profile-photo" />
+                    }
+                    else
+                    {
+                        <div class="profile-photo placeholder">
+                            Upload Profile Photo
+                        </div>
+                    }
+                </li>
+                <li class="nav-item">@Model.Email</li>
+                <li class="nav-item">@Model.Role</li>
+                <!-- Add other user details as required -->
             }
             else
             {
-                <li class="nav-item">No user data available</li>
+                <li class="nav-item">User details not available</li>
             }
-            <!-- Repeat for other buttons/links -->
+            <li class="nav-item"><button class="btn btn-primary btn-block mt-2 content-btn">Notifications</button></li>
+            <li class="nav-item"><button class="btn btn-primary btn-block mt-2 content-btn">Requests</button></li>
+            <li class="nav-item"><button class="btn btn-primary btn-block mt-2" data-bs-toggle="modal" data-bs-target="#updateProfileModal">Update Profile</button></li>
+            <li class="nav-item"><button class="btn btn-primary btn-block mt-2" data-bs-toggle="modal" data-bs-target="#updateProfilePhotoModal">Upload Photo</button></li>
+            <li class="nav-item"><button class="btn btn-primary btn-block mt-2 content-btn">Modify Roles</button></li>
+            <li class="nav-item"><button class="btn btn-primary btn-block mt-2 content-btn">Visitors</button></li>
         </ul>
     </div>
 </nav>
+
 
 <!-- Update Profile Modal -->
 <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
@@ -185,3 +222,33 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.content-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var targetId = '';
+                switch (btn.textContent.trim()) {
+                    case 'Notifications':
+                        targetId = 'contentNotifications';
+                        break;
+                    case 'Requests':
+                        targetId = 'contentRequests';
+                        break;
+                    case 'Visitors':
+                        targetId = 'contentVisitors';
+                        break;
+                    case 'Modify Roles':
+                        targetId = 'contentModifyRoles';
+                        break;
+                }
+
+                if (targetId) {
+                    document.querySelectorAll('.content-section').forEach(function (section) {
+                        section.style.display = 'none';
+                    });
+                    document.getElementById(targetId).style.display = 'block';
+                }
+            });
+        });
+    });
+</script>
